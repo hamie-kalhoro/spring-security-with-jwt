@@ -1,4 +1,4 @@
-package dev.hamidz.springsecurity.entity;
+package dev.hamidz.springsecurity.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

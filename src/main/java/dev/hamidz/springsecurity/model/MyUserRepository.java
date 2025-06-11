@@ -1,4 +1,4 @@
-package dev.hamidz.springsecurity.entity;
+package dev.hamidz.springsecurity.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
