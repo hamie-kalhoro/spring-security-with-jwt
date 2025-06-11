@@ -12,7 +12,7 @@ A simple implementation of Spring Security with JSON Web Tokens (JWT) for authen
 
 ## Technologies
 
-- Java 17
+- Java 17+
 - Spring Boot 3.1.5
 - Spring Security
 - JJWT (Java JWT library)
