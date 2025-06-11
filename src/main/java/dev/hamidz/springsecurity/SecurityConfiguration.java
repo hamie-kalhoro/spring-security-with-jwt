@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                 .formLogin(AbstractAuthenticationFilterConfigurer -> {
                     AbstractAuthenticationFilterConfigurer
                             .loginPage("/login")
+                            .successHandler(new AuthenticationSuccessHandler())
                             .permitAll();
                 })
                 .build();
