@@ -3,7 +3,9 @@ package dev.hamidz.springsecurity;
 import dev.hamidz.springsecurity.model.MyUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,7 +29,7 @@ public class SecurityConfiguration {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                 registry -> {
-                    registry.requestMatchers("/home", "/register/**").permitAll();
+                    registry.requestMatchers("/home", "/register/**", "/authenticate").permitAll();
                     registry.requestMatchers("/user/**").hasRole("USER");
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
                     registry.anyRequest().authenticated();
@@ -41,21 +43,23 @@ public class SecurityConfiguration {
                 .build();
     }
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user = User.builder()
-//                .username("hamid")
-//                .password("$2a$12$Set2xdhRcF6YXhg8OrZZUeD4oLzuqAQes/frcKsOIjSMA4qGQapfa")
-//                .roles("USER")
-//                .build();
-//
-//        UserDetails admin = User.builder()
-//                .username("hamidali")
-//                .password("$2a$12$LEULoMC5YF2YzKUndusXceJQv3G.NVy2aEV6zU04w9qMrPH1mcusS")
-//                .roles("ADMIN")
-//                .build();
-//        return new InMemoryUserDetailsManager(user, admin);
-//    }
+    /*        -----  LOADING USER IN-MEMORY  -----
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        UserDetails user = User.builder()
+                .username("hamid")
+                .password("$2a$12$Set2xdhRcF6YXhg8OrZZUeD4oLzuqAQes/frcKsOIjSMA4qGQapfa")
+                .roles("USER")
+                .build();
+
+        UserDetails admin = User.builder()
+                .username("hamidali")
+                .password("$2a$12$LEULoMC5YF2YzKUndusXceJQv3G.NVy2aEV6zU04w9qMrPH1mcusS")
+                .roles("ADMIN")
+                .build();
+        return new InMemoryUserDetailsManager(user, admin);
+    }*/
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -64,10 +68,15 @@ public class SecurityConfiguration {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(myUserDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(myUserDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        return new ProviderManager(authenticationProvider());
     }
 
     @Bean
